@@ -1,18 +1,33 @@
 package com.kmdhtsh.qiita0lgtmviewer.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kmdhtsh.qiita0lgtmviewer.R
 import com.kmdhtsh.qiita0lgtmviewer.entity.Article
 import com.kmdhtsh.qiita0lgtmviewer.entity.User
-import kotlinx.android.synthetic.main.fragment_article_list.*
 
 class ArticleListFragment : Fragment() {
+
+    private lateinit var searchView: SearchView
+
+    private val onQueryTextListener = object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return false
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            return false
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,6 +41,15 @@ class ArticleListFragment : Fragment() {
             }
         }
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.options_menu, menu)
+        val menuItem = menu.findItem(R.id.search)
+        searchView = menuItem.actionView as SearchView
+        searchView.setOnQueryTextListener(onQueryTextListener)
     }
 
     private fun createDummyData(): List<Article> {
@@ -141,10 +165,5 @@ class ArticleListFragment : Fragment() {
                 )
             ),
         )
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = ArticleListFragment()
     }
 }
