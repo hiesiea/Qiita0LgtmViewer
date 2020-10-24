@@ -8,11 +8,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kmdhtsh.qiita0lgtmviewer.R
 import com.kmdhtsh.qiita0lgtmviewer.entity.Article
-import com.kmdhtsh.qiita0lgtmviewer.entity.User
+import com.kmdhtsh.qiita0lgtmviewer.repository.SearchRepository
+import com.kmdhtsh.qiita0lgtmviewer.service.SearchService
+import com.kmdhtsh.qiita0lgtmviewer.viewmodel.ArticleListViewModel
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 class ArticleListFragment : Fragment() {
 
     private lateinit var searchView: SearchView
+    private lateinit var viewModel: ArticleListViewModel
+    private lateinit var articleRecyclerViewAdapter: ArticleRecyclerViewAdapter
+    private val articleList = mutableListOf<Article>()
+
 
     private val onQueryTextListener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
@@ -27,6 +35,14 @@ class ArticleListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+        val searchService = retrofit.create(SearchService::class.java)
+        val searchRepository = SearchRepository(searchService)
+        viewModel = ArticleListViewModel(searchRepository)
     }
 
     override fun onCreateView(
@@ -37,10 +53,29 @@ class ArticleListFragment : Fragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = ArticleRecyclerViewAdapter(createDummyData())
+                articleRecyclerViewAdapter = ArticleRecyclerViewAdapter(articleList)
+                adapter = articleRecyclerViewAdapter
             }
         }
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // TODO: スクロールし終わったらさらに次の20件を読み込むようにしたい
+        viewModel.search("1", "20", "Java")
+        viewModel.articleList.observe(this, { result ->
+            result.fold(
+                {
+                    articleList.clear()
+                    articleList.addAll(it)
+                    articleRecyclerViewAdapter.notifyDataSetChanged()
+                },
+                {
+
+                }
+            )
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -52,118 +87,8 @@ class ArticleListFragment : Fragment() {
         searchView.setOnQueryTextListener(onQueryTextListener)
     }
 
-    private fun createDummyData(): List<Article> {
-        return mutableListOf(
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-            Article(
-                "1",
-                "aaaa",
-                "https://github.com/",
-                User(
-                    "1",
-                    "aaa",
-                    "https://qiita-image-store.s3.amazonaws.com/0/93963/profile-images/1518932095"
-                )
-            ),
-        )
+    companion object {
+        private const val TAG = "ArticleListFragment"
+        private const val BASE_URL = "https://qiita.com"
     }
 }

@@ -22,7 +22,7 @@
             android:layout_height="@dimen/profile_image_view_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{article.user.profileImageUrl}"
+            bind:imageUrl="@{article.user.profile_image_url}"
             tools:background="#f00" />
 
         <TextView
