@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kmdhtsh.qiita0lgtmviewer.R
 import com.kmdhtsh.qiita0lgtmviewer.entity.Article
 import com.kmdhtsh.qiita0lgtmviewer.entity.User
+import kotlinx.android.synthetic.main.fragment_article_list.*
 
 class ArticleListFragment : Fragment() {
 
@@ -18,7 +19,6 @@ class ArticleListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_article_list, container, false)
-
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context)
