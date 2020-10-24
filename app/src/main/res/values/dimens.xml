@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="view_article_padding">16dp</dimen>
+    <dimen name="profile_image_view_width">60dp</dimen>
+    <dimen name="profile_image_view_height">60dp</dimen>
+    <dimen name="title_text_view_margin_start">16dp</dimen>
+    <dimen name="title_text_view_text_size">18sp</dimen>
+    <dimen name="user_name_text_view_margin_top">8dp</dimen>
+    <dimen name="user_name_text_view_text_size">14sp</dimen>
+</resources>
