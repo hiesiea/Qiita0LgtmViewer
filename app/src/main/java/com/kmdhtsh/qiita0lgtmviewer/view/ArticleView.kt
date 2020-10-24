@@ -18,14 +18,7 @@ class ArticleView : FrameLayout {
         defStyleAttr
     )
 
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int
-    ) : super(context, attrs, defStyleAttr, defStyleRes)
-
-    val binding: ViewArticleBinding =
+    private val binding: ViewArticleBinding =
         DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_article, this, true)
 
     fun setArticle(article: Article) {

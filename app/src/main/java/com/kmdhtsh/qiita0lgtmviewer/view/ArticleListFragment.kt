@@ -144,10 +144,7 @@ class ArticleListFragment : Fragment() {
     }
 
     companion object {
-
-        // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance() =
-            ArticleListFragment()
+        fun newInstance() = ArticleListFragment()
     }
 }
