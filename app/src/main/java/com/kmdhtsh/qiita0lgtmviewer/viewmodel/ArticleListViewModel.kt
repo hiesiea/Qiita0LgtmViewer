@@ -1,14 +1,17 @@
 package com.kmdhtsh.qiita0lgtmviewer.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.*
 import com.kmdhtsh.qiita0lgtmviewer.entity.Article
 import com.kmdhtsh.qiita0lgtmviewer.repository.SearchRepository
 import kotlinx.coroutines.launch
 
-class ArticleListViewModel(private val searchRepository: SearchRepository) : ViewModel() {
+class ArticleListViewModel @ViewModelInject constructor(
+    private val searchRepository: SearchRepository,
+    @Assisted private val savedStateHandle: SavedStateHandle
+) :
+    ViewModel() {
     private val _articleList = MutableLiveData<Result<List<Article>>>()
     val articleList: LiveData<Result<List<Article>>> = _articleList
 

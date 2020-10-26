@@ -4,23 +4,20 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kmdhtsh.qiita0lgtmviewer.R
 import com.kmdhtsh.qiita0lgtmviewer.entity.Article
-import com.kmdhtsh.qiita0lgtmviewer.repository.SearchRepository
-import com.kmdhtsh.qiita0lgtmviewer.service.SearchService
 import com.kmdhtsh.qiita0lgtmviewer.viewmodel.ArticleListViewModel
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class ArticleListFragment : Fragment() {
     private lateinit var searchView: SearchView
-    private lateinit var viewModel: ArticleListViewModel
 
+    private val viewModel: ArticleListViewModel by viewModels()
     private val articleList = mutableListOf<Article>()
     private val articleRecyclerViewAdapter = ArticleRecyclerViewAdapter(articleList)
     private val linearLayoutManager = LinearLayoutManager(context)
@@ -86,26 +83,6 @@ class ArticleListFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-
-        val logging = HttpLoggingInterceptor {
-            Timber.tag("OkHttp").d(it)
-        }
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
-
-        val client = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(client)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-
-        val searchService = retrofit.create(SearchService::class.java)
-        val searchRepository = SearchRepository(searchService)
-
-        viewModel = ArticleListViewModel(searchRepository)
     }
 
     override fun onCreateView(
@@ -128,7 +105,7 @@ class ArticleListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.articleList.observe(this, { result ->
+        viewModel.articleList.observe(viewLifecycleOwner, { result ->
             result.fold(
                 {
                     articleList.addAll(it)
@@ -152,7 +129,6 @@ class ArticleListFragment : Fragment() {
 
     companion object {
         private const val TAG = "ArticleListFragment"
-        private const val BASE_URL = "https://qiita.com"
         private const val VISIBLE_THRESHOLD = 5
         private const val PER_PAGE = 20
     }
