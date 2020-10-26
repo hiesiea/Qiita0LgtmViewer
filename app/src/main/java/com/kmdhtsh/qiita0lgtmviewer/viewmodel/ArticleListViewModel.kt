@@ -12,18 +12,18 @@ class ArticleListViewModel(private val searchRepository: SearchRepository) : Vie
     private val _articleList = MutableLiveData<Result<List<Article>>>()
     val articleList: LiveData<Result<List<Article>>> = _articleList
 
-    fun search(page: String, perPage: String, query: String) = viewModelScope.launch {
+    fun search(page: Int, perPage: Int, query: String) = viewModelScope.launch {
         try {
-            val response = searchRepository.search(page, perPage, query)
+            val response = searchRepository.search(page.toString(), perPage.toString(), query)
             val result = if (response.isSuccessful) {
                 response.body()!!
             } else {
                 mutableListOf()
             }
-            // LGTM数が0の記事だけに絞りつつ、作成日時の昇順にする
+            // LGTM数が0の記事だけに絞る
             val filteredResult = result.filter {
                 it.likes_count == 0
-            }.reversed()
+            }
             _articleList.postValue(Result.success(filteredResult))
         } catch (e: Throwable) {
             _articleList.postValue(Result.failure(e))
