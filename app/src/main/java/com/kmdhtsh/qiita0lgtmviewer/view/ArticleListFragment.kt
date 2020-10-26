@@ -29,11 +29,16 @@ class ArticleListFragment : Fragment() {
 
     private val onQueryTextListener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
+            // onQueryTextSubmitが2回呼ばれるのを防ぐ
+            searchView.clearFocus()
+
             query?.let {
+                Timber.d("onQueryTextSubmit query=$it")
                 clearRecyclerView()
                 this@ArticleListFragment.query = it
                 viewModel.search(currentPage, PER_PAGE, it)
             }
+
             return false
         }
 
@@ -56,13 +61,13 @@ class ArticleListFragment : Fragment() {
             val visibleItemCount = recyclerView.childCount
             val totalItemCount = linearLayoutManager.itemCount
             val firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition()
-            Timber.tag(TAG)
+            Timber
                 .d("visibleItemCount=$visibleItemCount, totalItemCount=$totalItemCount, firstVisibleItem=$firstVisibleItem")
 
             if (loading) {
-                Timber.tag(TAG).d("load中")
+                Timber.d("loading")
                 if (totalItemCount > previousTotal) {
-                    Timber.tag(TAG).d("loadおわり")
+                    Timber.d("finish load")
                     loading = false
                     previousTotal = totalItemCount
                 }
@@ -70,7 +75,7 @@ class ArticleListFragment : Fragment() {
 
             if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + VISIBLE_THRESHOLD)) {
                 query?.let {
-                    Timber.tag(TAG).d("loadする")
+                    Timber.d("start load")
                     currentPage++
                     viewModel.search(currentPage, PER_PAGE, it)
                     loading = true
@@ -112,7 +117,7 @@ class ArticleListFragment : Fragment() {
                     articleRecyclerViewAdapter.notifyDataSetChanged()
                 },
                 {
-                    Timber.tag(TAG).e(it)
+                    Timber.e(it)
                 }
             )
         })
@@ -128,7 +133,6 @@ class ArticleListFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "ArticleListFragment"
         private const val VISIBLE_THRESHOLD = 5
         private const val PER_PAGE = 20
     }
