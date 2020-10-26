@@ -1,7 +1,6 @@
 package com.kmdhtsh.qiita0lgtmviewer.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -16,6 +15,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
 
 
 class ArticleListFragment : Fragment() {
@@ -60,15 +60,13 @@ class ArticleListFragment : Fragment() {
             val visibleItemCount = recyclerView.childCount
             val totalItemCount = linearLayoutManager.itemCount
             val firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition()
-            Log.d(
-                TAG,
-                "visibleItemCount=$visibleItemCount, totalItemCount=$totalItemCount, firstVisibleItem=$firstVisibleItem"
-            )
+            Timber.tag(TAG)
+                .d("visibleItemCount=$visibleItemCount, totalItemCount=$totalItemCount, firstVisibleItem=$firstVisibleItem")
 
             if (loading) {
-                Log.d(TAG, "load中")
+                Timber.tag(TAG).d("load中")
                 if (totalItemCount > previousTotal) {
-                    Log.d(TAG, "loadおわり")
+                    Timber.tag(TAG).d("loadおわり")
                     loading = false
                     previousTotal = totalItemCount
                 }
@@ -76,7 +74,7 @@ class ArticleListFragment : Fragment() {
 
             if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + VISIBLE_THRESHOLD)) {
                 query?.let {
-                    Log.d(TAG, "loadする")
+                    Timber.tag(TAG).d("loadする")
                     currentPage++
                     viewModel.search(currentPage, PER_PAGE, it)
                     loading = true

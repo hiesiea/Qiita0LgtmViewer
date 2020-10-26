@@ -6,7 +6,6 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.recyclerview.widget.RecyclerView
 import com.kmdhtsh.qiita0lgtmviewer.entity.Article
 
-
 class ArticleRecyclerViewAdapter(
     private val values: List<Article>
 ) : RecyclerView.Adapter<ArticleRecyclerViewAdapter.ViewHolder>() {
