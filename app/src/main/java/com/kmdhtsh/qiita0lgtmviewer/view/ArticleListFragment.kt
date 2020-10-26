@@ -87,7 +87,9 @@ class ArticleListFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        val logging = HttpLoggingInterceptor()
+        val logging = HttpLoggingInterceptor {
+            Timber.tag("OkHttp").d(it)
+        }
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
 
         val client = OkHttpClient.Builder()
