@@ -17,7 +17,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 
-
 class ArticleListFragment : Fragment() {
     private lateinit var searchView: SearchView
     private lateinit var viewModel: ArticleListViewModel
@@ -85,20 +84,25 @@ class ArticleListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setHasOptionsMenu(true)
 
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
+
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
+
         val searchService = retrofit.create(SearchService::class.java)
         val searchRepository = SearchRepository(searchService)
+
         viewModel = ArticleListViewModel(searchRepository)
     }
 
@@ -107,6 +111,7 @@ class ArticleListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_article_list, container, false)
+
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = linearLayoutManager
@@ -114,11 +119,13 @@ class ArticleListFragment : Fragment() {
                 adapter = articleRecyclerViewAdapter
             }
         }
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel.articleList.observe(this, { result ->
             result.fold(
                 {
@@ -126,7 +133,7 @@ class ArticleListFragment : Fragment() {
                     articleRecyclerViewAdapter.notifyDataSetChanged()
                 },
                 {
-
+                    Timber.tag(TAG).e(it)
                 }
             )
         })
