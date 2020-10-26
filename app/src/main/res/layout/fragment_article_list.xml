@@ -6,8 +6,8 @@
     android:name="com.kmdhtsh.qiita0lgtmviewer.view.ArticleListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginStart="@dimen/list_margin_start"
+    android:layout_marginEnd="@dimen/list_margin_end"
     app:layoutManager="LinearLayoutManager"
     tools:context=".view.ArticleListFragment"
     tools:listitem="@layout/view_article" />
