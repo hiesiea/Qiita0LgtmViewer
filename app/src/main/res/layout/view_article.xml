@@ -36,17 +36,19 @@
             android:textSize="@dimen/title_text_view_text_size"
             app:layout_constraintStart_toEndOf="@id/profile_image_view"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="記事のタイトル" />
+            tools:text="記事のタイトル記事のタイトル記事のタイトル記事のタイトル記事のタイトル記事のタイトル記事のタイトル" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/user_name_text_view_margin_top"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:text="@{article.user.name}"
             android:textSize="@dimen/user_name_text_view_text_size"
             app:layout_constraintStart_toStartOf="@id/title_text_view"
             app:layout_constraintTop_toBottomOf="@id/title_text_view"
-            tools:text="ユーザの名前" />
+            tools:text="ユーザの名前ユーザの名前ユーザの名前ユーザの名前ユーザの名前" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
