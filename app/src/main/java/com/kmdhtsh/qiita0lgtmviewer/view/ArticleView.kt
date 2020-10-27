@@ -9,6 +9,9 @@ import com.kmdhtsh.qiita0lgtmviewer.R
 import com.kmdhtsh.qiita0lgtmviewer.databinding.ViewArticleBinding
 import com.kmdhtsh.qiita0lgtmviewer.entity.Article
 
+/**
+ * 記事表示用View
+ */
 class ArticleView : FrameLayout {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -21,6 +24,10 @@ class ArticleView : FrameLayout {
     private val binding: ViewArticleBinding =
         DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_article, this, true)
 
+    /**
+     * 記事をViewに設定
+     * @param article 記事
+     */
     fun setArticle(article: Article) {
         binding.article = article
     }

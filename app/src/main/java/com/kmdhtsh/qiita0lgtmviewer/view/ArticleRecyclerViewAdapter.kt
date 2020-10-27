@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kmdhtsh.qiita0lgtmviewer.entity.Article
 import timber.log.Timber
 
+/**
+ * 記事表示用RecyclerViewAdapter
+ */
 class ArticleRecyclerViewAdapter(
     private val values: List<Article>
 ) : RecyclerView.Adapter<ArticleRecyclerViewAdapter.ViewHolder>() {

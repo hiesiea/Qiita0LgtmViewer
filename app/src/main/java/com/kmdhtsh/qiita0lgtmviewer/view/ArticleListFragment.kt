@@ -13,6 +13,10 @@ import com.kmdhtsh.qiita0lgtmviewer.viewmodel.ArticleListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+/**
+ * 記事一覧表示用Fragment
+ * DI対象のFragmentには@AndroidEntryPointを付ける必要がある
+ */
 @AndroidEntryPoint
 class ArticleListFragment : Fragment() {
     private lateinit var searchView: SearchView

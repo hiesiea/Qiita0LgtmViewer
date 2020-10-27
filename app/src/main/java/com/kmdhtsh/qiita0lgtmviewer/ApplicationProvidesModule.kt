@@ -12,12 +12,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 
+/**
+ * DI用ProvidesModule
+ * @Inject が付いたプロパティや引数に提供する値の実体を定義
+ */
 @Module
 @InstallIn(ApplicationComponent::class)
 object ApplicationProvidesModule {
 
+    /**
+     * HttpLoggingInterceptorの提供
+     */
     @Provides
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+        // OkHttp側でもTimberを使用する
         val logging = HttpLoggingInterceptor {
             Timber.tag("OkHttp").d(it)
         }
@@ -25,6 +33,10 @@ object ApplicationProvidesModule {
         return logging
     }
 
+    /**
+     * OkHttpClientの提供
+     * @param httpLoggingInterceptor
+     */
     @Provides
     fun provideOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor
@@ -34,6 +46,10 @@ object ApplicationProvidesModule {
             .build()
     }
 
+    /**
+     * SearchServiceの提供
+     * @param okHttpClient
+     */
     @Provides
     fun provideSearchService(okHttpClient: OkHttpClient): SearchService {
         return Retrofit.Builder()
@@ -44,6 +60,10 @@ object ApplicationProvidesModule {
             .create(SearchService::class.java)
     }
 
+    /**
+     * SearchRepositoryの提供
+     * @param searchService
+     */
     @Provides
     fun provideSearchRepository(searchService: SearchService): SearchRepository {
         return SearchRepository(searchService)
