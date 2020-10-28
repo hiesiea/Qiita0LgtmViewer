@@ -44,10 +44,11 @@ class ArticleListViewModel @ViewModelInject constructor(
             val filteredResult = result.filter {
                 it.likes_count == 0
             }
-            _articleList.postValue(Result.success(filteredResult))
+            // viewModelScopeはメインスレッドなので、setValueで値をセットする
+            _articleList.value = Result.success(filteredResult)
             Timber.d("search finish")
         } catch (e: Throwable) {
-            _articleList.postValue(Result.failure(e))
+            _articleList.value = Result.failure(e)
         }
     }
 }
