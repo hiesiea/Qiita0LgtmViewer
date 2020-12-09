@@ -35,7 +35,7 @@ class ArticleListViewModel @ViewModelInject constructor(
 
             // Responseに失敗しても何かしら返す
             val result = if (response.isSuccessful) {
-                response.body()!!
+                response.body() ?: mutableListOf()
             } else {
                 mutableListOf()
             }
@@ -44,6 +44,7 @@ class ArticleListViewModel @ViewModelInject constructor(
             val filteredResult = result.filter {
                 it.likes_count == 0
             }
+
             // viewModelScopeはメインスレッドなので、setValueで値をセットする
             _articleList.value = Result.success(filteredResult)
             Timber.d("search finish")
