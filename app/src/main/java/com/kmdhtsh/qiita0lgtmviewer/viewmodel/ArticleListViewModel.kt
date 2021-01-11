@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kmdhtsh.qiita0lgtmviewer.entity.Article
 import com.kmdhtsh.qiita0lgtmviewer.repository.SearchRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -15,8 +16,8 @@ import timber.log.Timber
  */
 class ArticleListViewModel @ViewModelInject constructor(
     private val searchRepository: SearchRepository
-) :
-    ViewModel() {
+) : ViewModel() {
+
     // 記事一覧（読み書き用）
     // MutableLiveDataだと受け取った側でも値を操作できてしまうので、読み取り用のLiveDataも用意しておく
     private val _articleList = MutableLiveData<Result<List<Article>>>()
@@ -30,7 +31,7 @@ class ArticleListViewModel @ViewModelInject constructor(
      */
     fun search(page: Int, perPage: Int, query: String) = viewModelScope.launch {
         try {
-            Timber.d("search start")
+            Timber.d("search page=$page, perPage=$perPage, query=$query")
             val response = searchRepository.search(page.toString(), perPage.toString(), query)
 
             // Responseに失敗しても何かしら返す
@@ -47,7 +48,8 @@ class ArticleListViewModel @ViewModelInject constructor(
 
             // viewModelScopeはメインスレッドなので、setValueで値をセットする
             _articleList.value = Result.success(filteredResult)
-            Timber.d("search finish")
+        } catch (e: CancellationException) {
+            // キャンセルの場合は何もしない
         } catch (e: Throwable) {
             _articleList.value = Result.failure(e)
         }
